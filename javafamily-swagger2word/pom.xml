@@ -46,6 +46,27 @@
          <artifactId>poi-tl</artifactId>
       </dependency>
 
+      <dependency>
+         <groupId>io.swagger</groupId>
+         <artifactId>swagger-parser</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>commons-io</groupId>
+               <artifactId>commons-io</artifactId>
+            </exclusion>
+         </exclusions>
+      </dependency>
+
+      <dependency>
+         <groupId>com.deepoove</groupId>
+         <artifactId>poi-tl-plugin-highlight</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring-expression</artifactId>
+      </dependency>
+
    </dependencies>
 
    <build>

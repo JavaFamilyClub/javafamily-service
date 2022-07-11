@@ -17,6 +17,10 @@
    <url>https://github.com/JavaFamilyClub/javafamily-service</url>
    <description>javafamily tools service</description>
 
+   <properties>
+      <swagger.parser.version>1.0.50</swagger.parser.version>
+   </properties>
+
    <modules>
       <module>javafamily-swagger2word</module>
    </modules>
@@ -38,7 +42,7 @@
          <url>https://oss.sonatype.org/content/repositories/snapshots</url>
          <releases>
             <enabled>false</enabled>
-            <updatePolicy>always</updatePolicy>
+            <updatePolicy>never</updatePolicy>
          </releases>
          <snapshots>
             <enabled>true</enabled>
@@ -46,6 +50,67 @@
          </snapshots>
       </repository>
    </repositories>
+
+   <dependencyManagement>
+      <dependencies>
+         <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-parser</artifactId>
+            <version>${swagger.parser.version}</version>
+            <exclusions>
+               <exclusion>
+                  <groupId>commons-io</groupId>
+                  <artifactId>commons-io</artifactId>
+               </exclusion>
+            </exclusions>
+         </dependency>
+
+         <dependency>
+            <groupId>com.deepoove</groupId>
+            <artifactId>codehighlight</artifactId>
+            <version>1.0.3</version>
+         </dependency>
+
+         <dependency>
+            <groupId>com.deepoove</groupId>
+            <artifactId>poi-tl-plugin-highlight</artifactId>
+            <version>1.0.0</version>
+         </dependency>
+
+         <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>5.2.0</version>
+         </dependency>
+         <dependency>
+            <groupId>com.deepoove</groupId>
+            <artifactId>poi-ooxml-schemas-extra</artifactId>
+            <version>5.1.0</version>
+         </dependency>
+         <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-transcoder</artifactId>
+            <version>1.14</version>
+         </dependency>
+         <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>batik-codec</artifactId>
+            <version>1.14</version>
+         </dependency>
+
+         <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-models</artifactId>
+            <version>1.5.22</version>
+         </dependency>
+
+         <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>1.5.22</version>
+         </dependency>
+      </dependencies>
+   </dependencyManagement>
 
    <build>
       <pluginManagement>
