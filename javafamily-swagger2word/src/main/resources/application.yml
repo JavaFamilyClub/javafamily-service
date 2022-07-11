@@ -1,0 +1,6 @@
+spring:
+   application:
+      name: javafamily-swagger2word
+
+server:
+   port: 9500
