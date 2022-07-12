@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 @DisplayName("Swagger to Word Example")
 public class SwaggerToWordExample {
 
-     String location = "http://javafamily.club/v2/api-docs";
+     String location = "https://hxt.yijiweather.com/hxt-api/v2/api-docs";
 //    String location = "src/test/resources/swagger/petstore.json";
 
     @Test
@@ -59,21 +59,21 @@ public class SwaggerToWordExample {
         final ClassPathResource templateResource
                 = new ClassPathResource("swagger.docx");
 
-//        XWPFTemplate template = XWPFTemplate.compile(templateResource.getInputStream(), config)
-//                .render(viewData);
-
-        XWPFTemplate template = XWPFTemplate.compile("E:\\Repositories\\javafamily-service\\javafamily-swagger2word\\src\\main\\resources\\swagger.docx", config)
+        XWPFTemplate template = XWPFTemplate.compile(templateResource.getInputStream(), config)
                 .render(viewData);
 
+//        XWPFTemplate template = XWPFTemplate.compile("E:\\Repositories\\javafamily-service\\javafamily-swagger2word\\src\\main\\resources\\swagger.docx", config)
+//                .render(viewData);
+
         // 输出文件
-        final File outputFile = new File("E:\\Repositories\\javafamily-service\\javafamily-swagger2word\\target\\swagger-output.docx");
+        final File outputFile = new File("E:\\Repositories\\javafamily-service\\javafamily-swagger2word\\target\\接口文档.docx");
 
         if(!outputFile.exists()) {
             if(!outputFile.createNewFile()) {
                 throw new RuntimeException("创建文件失败!");
             }
             else {
-//                log.info("在 {} 创建了新的文件.", outputFile.getAbsolutePath());
+                log.info("在 {} 创建了新的文件.", outputFile.getAbsolutePath());
             }
         }
 
@@ -224,7 +224,9 @@ public class SwaggerToWordExample {
                     }
                 }
 
-                definitions.add(definition);
+                if(definition.getDefinitionCode() != null) {
+                    definitions.add(definition);
+                }
             });
             view.setDefinitions(definitions);
         }
@@ -246,7 +248,7 @@ public class SwaggerToWordExample {
             String ref = ((RefProperty) prop).get$ref().substring("#/definitions/".length());
 
             if(ObjectUtils.nullSafeEquals(ref, definitions.get(ref).getTitle())) {
-                return null;
+                return "-";
             }
 
             if (keyCache.contains(ref))
