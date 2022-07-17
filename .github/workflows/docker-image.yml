@@ -7,12 +7,12 @@ on:
   release:
     types: [created]
   push:
-    branches: [ master ]
+    branches: [ main ]
     paths-ignore:
       - '**.md'
       - 'docs/**/*'
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
     paths-ignore:
       - '**.md'
       - 'docs/**/*'
