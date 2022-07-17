@@ -26,5 +26,5 @@ javafamily:
       feishu:
          hook-url: https://open.feishu.cn/open-apis/bot/v2/hook/${FEISHU_TOKEN}
          security-type: keyword
-         keyWord: Test
+         keyWord: 测试
 

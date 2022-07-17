@@ -5,6 +5,7 @@ import club.javafamily.nf.request.FeiShuTextNotifyRequest;
 import club.javafamily.nf.request.tags.BaseTextTagContentItem;
 import club.javafamily.nf.request.tags.LinkTagContentItem;
 import club.javafamily.nf.service.FeiShuNotifyHandler;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -22,9 +23,12 @@ public class AlertController {
    }
 
    @GetMapping("/alert/text")
-   public String alertText(@RequestParam("text") String text) {
+   public String alertText(@RequestBody String body) {
+      final JSONObject json = JSONObject.parseObject(body);
+
       final FeiShuTextNotifyRequest request
-         = FeiShuTextNotifyRequest.of(text);
+         = FeiShuTextNotifyRequest.of(
+            json.getJSONObject("commonAnnotations").getString("text"));
 
       return feiShuNotifyHandler.notify(request);
    }
