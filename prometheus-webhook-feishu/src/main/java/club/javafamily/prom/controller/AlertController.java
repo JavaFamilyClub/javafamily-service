@@ -1,6 +1,9 @@
 package club.javafamily.prom.controller;
 
+import club.javafamily.nf.request.FeiShuPostNotifyRequest;
 import club.javafamily.nf.request.FeiShuTextNotifyRequest;
+import club.javafamily.nf.request.tags.BaseTextTagContentItem;
+import club.javafamily.nf.request.tags.LinkTagContentItem;
 import club.javafamily.nf.service.FeiShuNotifyHandler;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,8 +22,22 @@ public class AlertController {
    }
 
    @GetMapping("/alert/text")
-   public String alertText(@RequestParam String text) {
+   public String alertText(@RequestParam("text") String text) {
       final FeiShuTextNotifyRequest request = FeiShuTextNotifyRequest.of(text);
+
+      return feiShuNotifyHandler.notify(request);
+   }
+
+   @GetMapping("/alert/post")
+   public String alertPost(@RequestParam("title") String title,
+                           @RequestParam("content") String content,
+                           @RequestParam("btnLabel") String btnLabel,
+                           @RequestParam("btnLink") String btnLink)
+   {
+      final FeiShuPostNotifyRequest request = FeiShuPostNotifyRequest.of(
+         title,
+         new BaseTextTagContentItem(content),
+         new LinkTagContentItem(btnLabel, btnLink));
 
       return feiShuNotifyHandler.notify(request);
    }
