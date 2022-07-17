@@ -36,7 +36,7 @@ public class AlertController {
    {
       final FeiShuPostNotifyRequest request = FeiShuPostNotifyRequest.of(
          title,
-         new BaseTextTagContentItem(content),
+         new BaseTextTagContentItem<>(content),
          new LinkTagContentItem(btnLabel, btnLink));
 
       return feiShuNotifyHandler.notify(request);
