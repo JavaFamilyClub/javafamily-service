@@ -23,8 +23,7 @@ public class AlertController {
 
    @GetMapping("/alert/text")
    public String alertText(@RequestParam("text") String text) {
-      final FeiShuTextNotifyRequest request
-         = FeiShuTextNotifyRequest.of(text);
+      final FeiShuTextNotifyRequest request = FeiShuTextNotifyRequest.of(text);
 
       return feiShuNotifyHandler.notify(request);
    }
