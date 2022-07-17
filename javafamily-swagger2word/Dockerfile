@@ -22,8 +22,6 @@ ENV JAVA_OPTS="\
 
 ENV ACTIVE_PROFILE prod
 
-ENV FEISHU_TOKEN ""
-
 # run command
 ENTRYPOINT java ${JAVA_OPTS} \
    -Djava.security.egd=file:/dev/./urandom \
