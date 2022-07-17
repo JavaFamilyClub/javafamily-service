@@ -28,11 +28,14 @@ public class AlertController {
    public String alertText(@RequestBody String body) {
       final JSONObject json = JSONObject.parseObject(body);
 
-      log.info("Request received, body is: \n{}\n", json.toJSONString());
+      final String text = json.getJSONObject("commonAnnotations")
+         .getString("description");
+
+      log.info("Request received, body is: \n{}\n, text is {} \n",
+         json.toJSONString(), text);
 
       final FeiShuTextNotifyRequest request
-         = FeiShuTextNotifyRequest.of(
-            json.getJSONObject("commonAnnotations").getString("description"));
+         = FeiShuTextNotifyRequest.of(text);
 
       final String response = feiShuNotifyHandler.notify(request);
 
