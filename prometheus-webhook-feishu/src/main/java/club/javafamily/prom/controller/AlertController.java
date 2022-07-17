@@ -6,6 +6,7 @@ import club.javafamily.nf.request.tags.BaseTextTagContentItem;
 import club.javafamily.nf.request.tags.LinkTagContentItem;
 import club.javafamily.nf.service.FeiShuNotifyHandler;
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
  * @description
  */
 @RestController
+@Slf4j
 public class AlertController {
 
    private final FeiShuNotifyHandler feiShuNotifyHandler;
@@ -24,6 +26,7 @@ public class AlertController {
 
    @GetMapping("/alert/text")
    public String alertText(@RequestBody String body) {
+      log.info("Request received, body is: \n{}\n", body);
       final JSONObject json = JSONObject.parseObject(body);
 
       final FeiShuTextNotifyRequest request
