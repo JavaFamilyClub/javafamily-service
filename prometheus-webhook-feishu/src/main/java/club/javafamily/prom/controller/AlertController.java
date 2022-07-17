@@ -26,14 +26,19 @@ public class AlertController {
 
    @PostMapping("/alert/text")
    public String alertText(@RequestBody String body) {
-      log.info("Request received, body is: \n{}\n", body);
       final JSONObject json = JSONObject.parseObject(body);
+
+      log.info("Request received, body is: \n{}\n", json.toJSONString());
 
       final FeiShuTextNotifyRequest request
          = FeiShuTextNotifyRequest.of(
             json.getJSONObject("commonAnnotations").getString("description"));
 
-      return feiShuNotifyHandler.notify(request);
+      final String response = feiShuNotifyHandler.notify(request);
+
+      log.info("\nRequestResponse is : {}\n", request);
+
+      return response;
    }
 
    @PostMapping("/alert/post")
