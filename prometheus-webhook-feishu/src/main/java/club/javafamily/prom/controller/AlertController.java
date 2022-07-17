@@ -31,7 +31,7 @@ public class AlertController {
 
       final FeiShuTextNotifyRequest request
          = FeiShuTextNotifyRequest.of(
-            json.getJSONObject("commonAnnotations").getString("text"));
+            json.getJSONObject("commonAnnotations").getString("description"));
 
       return feiShuNotifyHandler.notify(request);
    }
