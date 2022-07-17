@@ -43,7 +43,10 @@ jobs:
         MAVEN_PASSWORD: ${{ secrets.MAVEN_CENTER_PASSWORD }}
 
     - name: Compile and publish to docker hub
-      run: mvn clean verify
+      run: |
+        docker login -u javafamily -p ${{ secrets.JF_DOCKER_HUB_PWD }}
+        mvn clean verify
+        docker logout
       env:
         MAVEN_USERNAME: ${{ secrets.MAVEN_CENTER_USER_NAME }}
         MAVEN_PASSWORD: ${{ secrets.MAVEN_CENTER_PASSWORD }}
