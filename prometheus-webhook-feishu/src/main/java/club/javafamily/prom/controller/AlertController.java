@@ -24,7 +24,7 @@ public class AlertController {
       this.feiShuNotifyHandler = feiShuNotifyHandler;
    }
 
-   @GetMapping("/alert/text")
+   @PostMapping("/alert/text")
    public String alertText(@RequestBody String body) {
       log.info("Request received, body is: \n{}\n", body);
       final JSONObject json = JSONObject.parseObject(body);
@@ -36,7 +36,7 @@ public class AlertController {
       return feiShuNotifyHandler.notify(request);
    }
 
-   @GetMapping("/alert/post")
+   @PostMapping("/alert/post")
    public String alertPost(@RequestParam("title") String title,
                            @RequestParam("content") String content,
                            @RequestParam("btnLabel") String btnLabel,
