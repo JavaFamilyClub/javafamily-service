@@ -23,6 +23,7 @@
 
    <modules>
       <module>javafamily-swagger2word</module>
+      <module>prometheus-webhook-feishu</module>
    </modules>
 
    <distributionManagement>
