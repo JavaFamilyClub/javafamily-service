@@ -112,7 +112,9 @@ public class AlertController {
                                String templateKey,
                                String valueKey)
    {
-      if(ObjectUtils.isEmpty(templateKey)) {
+      if(ObjectUtils.isEmpty(templateKey)
+              || ObjectUtils.isEmpty(jsonObject.getString(templateKey)))
+      {
          return jsonObject.getString(valueKey);
       }
 
