@@ -11,6 +11,11 @@
 
    <artifactId>prometheus-webhook-feishu</artifactId>
 
+   <properties>
+      <DOCKER_ACCOUNT>account</DOCKER_ACCOUNT>
+      <DOCKER_PWD>pwd</DOCKER_PWD>
+   </properties>
+
    <dependencies>
       <dependency>
          <groupId>org.springframework.boot</groupId>
@@ -95,8 +100,8 @@
                <!--镜像tag -->
                <tag>${project.version}</tag>
                <!--镜像仓库用户名和密码 -->
-               <username>javafamily</username>
-               <password>dreamLi0812!@#</password>
+               <username>${DOCKER_ACCOUNT}</username>
+               <password>${DOCKER_PWD}</password>
 
                <!--自定义构建参数，可传递到Dockerfile文件中 -->
                <buildArgs>
