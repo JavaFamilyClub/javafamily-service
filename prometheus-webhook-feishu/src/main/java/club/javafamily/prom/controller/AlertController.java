@@ -1,8 +1,7 @@
 package club.javafamily.prom.controller;
 
-import club.javafamily.nf.request.FeiShuCardNotifyRequest;
-import club.javafamily.nf.request.FeiShuPostNotifyRequest;
-import club.javafamily.nf.request.FeiShuTextNotifyRequest;
+import club.javafamily.nf.properties.FeiShuProperties;
+import club.javafamily.nf.request.*;
 import club.javafamily.nf.request.tags.BaseTextTagContentItem;
 import club.javafamily.nf.request.tags.LinkTagContentItem;
 import club.javafamily.nf.service.FeiShuNotifyHandler;
@@ -10,8 +9,11 @@ import club.javafamily.prom.constant.SystemConstant;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.text.StringSubstitutor;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
 
@@ -25,9 +27,13 @@ import java.util.Map;
 public class AlertController {
 
    private final FeiShuNotifyHandler feiShuNotifyHandler;
+   private final RestTemplate restTemplate;
 
-   public AlertController(FeiShuNotifyHandler feiShuNotifyHandler) {
+   public AlertController(FeiShuNotifyHandler feiShuNotifyHandler,
+                          RestTemplate restTemplate)
+   {
       this.feiShuNotifyHandler = feiShuNotifyHandler;
+      this.restTemplate = restTemplate;
    }
 
    @PostMapping("/alert/text")
@@ -42,7 +48,9 @@ public class AlertController {
       final FeiShuTextNotifyRequest request
          = FeiShuTextNotifyRequest.of(text);
 
-      final String response = feiShuNotifyHandler.notify(request);
+      final String token = jsonObject.getString(SystemConstant.FEISHU_TOKEN_KEY);
+
+      final String response = getFeiShuNotifyHandler(token).notify(request);
 
       log.info("\n alertText response is : {}\n", request);
 
@@ -68,7 +76,9 @@ public class AlertController {
          new BaseTextTagContentItem<>(content),
          new LinkTagContentItem(btnLabel, btnLink));
 
-      String response = feiShuNotifyHandler.notify(request);
+      final String token = jsonObject.getString(SystemConstant.FEISHU_TOKEN_KEY);
+
+      final String response = getFeiShuNotifyHandler(token).notify(request);
 
       log.info("\n alertPost response is : {}\n", request);
 
@@ -92,7 +102,9 @@ public class AlertController {
       final FeiShuCardNotifyRequest request = FeiShuCardNotifyRequest.of(
               title, content, btnLabel, btnLink);
 
-      String response = feiShuNotifyHandler.notify(request);
+      final String token = jsonObject.getString(SystemConstant.FEISHU_TOKEN_KEY);
+
+      final String response = getFeiShuNotifyHandler(token).notify(request);
 
       log.info("\n alertCard response is : {}\n", request);
 
@@ -111,6 +123,25 @@ public class AlertController {
          json.toJSONString());
 
       return json.getJSONObject(SystemConstant.ANNO_KEY);
+   }
+
+   /**
+    * 获取飞书通知管理器
+    * @param token 自定义 token
+    * @return FeiShuNotifyHandler
+    */
+   @NonNull
+   private FeiShuNotifyHandler getFeiShuNotifyHandler(@Nullable String token) {
+      if(ObjectUtils.isEmpty(token)) {
+         return feiShuNotifyHandler;
+      }
+
+      final FeiShuProperties properties = new FeiShuProperties();
+
+      properties.setHookUrl(
+         "https://open.feishu.cn/open-apis/bot/v2/hook/" + token);
+
+      return new FeiShuNotifyHandler(properties, restTemplate);
    }
 
    /**

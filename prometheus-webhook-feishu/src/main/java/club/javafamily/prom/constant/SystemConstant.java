@@ -1,6 +1,16 @@
 package club.javafamily.prom.constant;
 
+/**
+ * @author Jack Li
+ * @date 2022/6/6 下午22:03
+ * @description
+ */
 public interface SystemConstant {
+
+    /**
+     * 指定飞书 token 的 key
+     */
+    String FEISHU_TOKEN_KEY = "token";
 
     /**
      * alert manager 推送过来包含 annotation 的 key
