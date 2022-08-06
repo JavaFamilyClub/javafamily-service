@@ -15,7 +15,7 @@ javafamily/prometheus-webhook-feishu:2.3.2-SNAPSHOT
 > 其中 `FEISHU_TOKEN`环境变量为可选参数， 为飞书 webhook 最后一部分，即 `https://open.feishu.cn/open-apis/bot/v2/hook/${FEISHU_TOKEN}`。
 >
 > * 如果只对一个飞书群通知，可以添加该环境变量即可；
-> * 如果需要对多个飞书群通知， 需要在 `Prometheus` 报警 rule 的 `annotations`中通过指定 **`token` **参数为不同飞书群通知；
+> * 如果需要对多个飞书群通知， 需要在 `Prometheus` 报警 rule 的 `annotations`中通过指定 `token` 参数为不同飞书群通知；
 
 
 
