@@ -1,4 +1,5 @@
 # Prometheus 飞书 AlertManager
+
 > 基于飞书 WebHook 机器人的 Alert Manager 的报警实现
 
 ## 1. 使用
@@ -20,9 +21,35 @@ javafamily/prometheus-webhook-feishu:2.3.2-SNAPSHOT
 
 ## 2. Api
 
+> 通知的内容通过 Prometheus 的报警规则配置 `annotations/template` 指定，template 支持 `${xxx}` 占位， XXX 取自 `annotations/xxx` 配置。也可以通过 `annotations/content` 直接指定，不做任何处理直接展示。
+>
+> **需注意， 飞书通知如果是关键字通知的话，通知内容中需要包含关键字！**
+
 ### 2.1 文本通知
 
+`${basePath}/alert/text`
 
+> 文本通知只需要指定 `template` 或者 `content`定义模板内容即可
+
+![image-20220806170743367](img/README//image-20220806170743367.png)
+
+### 2.2 POST 通知
+
+`${basePath}/alert/post`
+
+> 飞书的 POST 通知可以指定标题（`titleTemplate`/`title`）, 通知内容（`template/content`）, 按钮文本（`btn`）， 按钮链接(`link`)
+
+![image-20220806170844395](img/README//image-20220806170844395.png)
+
+
+
+### 2.3 Card 通知
+
+`${basePath}/alert/card`
+
+> 飞书的 Card 通知可以指定标题（`titleTemplate`/`title`）, 通知内容（`template/content`）, 按钮文本（`btn`）， 按钮链接(`link`)
+
+![image-20220806170925022](img/README//image-20220806170925022.png)
 
 
 
