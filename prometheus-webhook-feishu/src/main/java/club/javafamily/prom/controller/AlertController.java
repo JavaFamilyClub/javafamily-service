@@ -32,14 +32,12 @@ public class AlertController {
 
    @PostMapping("/alert/text")
    public String alertText(@RequestBody String body) {
-      final JSONObject json = JSONObject.parseObject(body);
+      JSONObject jsonObject = parseAnnotation(body);
 
-      JSONObject jsonObject = json.getJSONObject(SystemConstant.ANNO_KEY);
+      String text = parseContent(jsonObject,
+         SystemConstant.CONTENT_TEMPLATE, SystemConstant.CONTENT_KEY);
 
-      String text = parseContent(jsonObject, SystemConstant.CONTENT_TEMPLATE, SystemConstant.CONTENT_KEY);
-
-      log.info("Request received, body is: \n\n{}\n\n, text is {} \n",
-         json.toJSONString(), text);
+      log.info("Request received, text is {} \n", text);
 
       final FeiShuTextNotifyRequest request
          = FeiShuTextNotifyRequest.of(text);
@@ -53,17 +51,17 @@ public class AlertController {
 
    @PostMapping("/alert/post")
    public String alertPost(@RequestBody String body) {
-      final JSONObject json = JSONObject.parseObject(body);
+      JSONObject jsonObject = parseAnnotation(body);
 
-      JSONObject jsonObject = json.getJSONObject(SystemConstant.ANNO_KEY);
-
-      String title = parseContent(jsonObject, SystemConstant.TITLE_TEMPLATE, SystemConstant.TITLE_KEY);
-      String content = parseContent(jsonObject, SystemConstant.CONTENT_TEMPLATE, SystemConstant.CONTENT_KEY);
+      String title = parseContent(
+         jsonObject, SystemConstant.TITLE_TEMPLATE, SystemConstant.TITLE_KEY);
+      String content = parseContent(
+         jsonObject, SystemConstant.CONTENT_TEMPLATE, SystemConstant.CONTENT_KEY);
       String btnLabel = parseContent(jsonObject, null, SystemConstant.BTN_LABEL_KEY);
       String btnLink = parseContent(jsonObject, null, SystemConstant.BTN_LINK_KEY);
 
-      log.info("Request received, body is: \n\n{}\n\n, title is {}, content is {}, label is {}, link is {} \n",
-              json.toJSONString(), title, content, btnLabel, btnLink);
+      log.info("Request received, title is {}, content is {}, label is {}, link is {} \n",
+         title, content, btnLabel, btnLink);
 
       final FeiShuPostNotifyRequest request = FeiShuPostNotifyRequest.of(
          title,
@@ -79,17 +77,17 @@ public class AlertController {
 
    @PostMapping("/alert/card")
    public String alertCard(@RequestBody String body) {
-      final JSONObject json = JSONObject.parseObject(body);
+      JSONObject jsonObject = parseAnnotation(body);
 
-      JSONObject jsonObject = json.getJSONObject(SystemConstant.ANNO_KEY);
-
-      String title = parseContent(jsonObject, SystemConstant.TITLE_TEMPLATE, SystemConstant.TITLE_KEY);
-      String content = parseContent(jsonObject, SystemConstant.CONTENT_TEMPLATE, SystemConstant.CONTENT_KEY);
+      String title = parseContent(
+         jsonObject, SystemConstant.TITLE_TEMPLATE, SystemConstant.TITLE_KEY);
+      String content = parseContent(
+         jsonObject, SystemConstant.CONTENT_TEMPLATE, SystemConstant.CONTENT_KEY);
       String btnLabel = parseContent(jsonObject, null, SystemConstant.BTN_LABEL_KEY);
       String btnLink = parseContent(jsonObject, null, SystemConstant.BTN_LINK_KEY);
 
-      log.info("Request received, body is: \n\n{}\n\n, title is {}, content is {}, label is {}, link is {} \n",
-              json.toJSONString(), title, content, btnLabel, btnLink);
+      log.info("Request received, title is {}, content is {}, label is {}, link is {} \n",
+         title, content, btnLabel, btnLink);
 
       final FeiShuCardNotifyRequest request = FeiShuCardNotifyRequest.of(
               title, content, btnLabel, btnLink);
@@ -99,6 +97,20 @@ public class AlertController {
       log.info("\n alertCard response is : {}\n", request);
 
       return response;
+   }
+
+   /**
+    * 获取 Prometheus annotation 内容
+    * @param body 请求体
+    * @return commonAnnotations
+    */
+   private JSONObject parseAnnotation(String body) {
+      final JSONObject json = JSONObject.parseObject(body);
+
+      log.info("Request received, body is: \n\n{}\n\n",
+         json.toJSONString());
+
+      return json.getJSONObject(SystemConstant.ANNO_KEY);
    }
 
    /**
