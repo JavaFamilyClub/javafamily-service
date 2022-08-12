@@ -22,13 +22,16 @@ ENV JAVA_OPTS="\
 
 ENV ACTIVE_PROFILE prod
 
-# optonal env
+# spring env
 ENV CONTEXT_PATH "/xxl-job-admin"
 ENV PORT 8080
 ENV DS_INIT_MODE never
 
-# required env
-ENV MYSQL_URL ""
+# db env
+ENV MYSQL_IP "127.0.0.1"
+ENV MYSQL_PORT "3306"
+ENV MYSQL_DBNAME "db_xxl-job"
+ENV MYSQL_URL_PARAMS "?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai"
 ENV MYSQL_USERNAME ""
 ENV MYSQL_PWD ""
 
