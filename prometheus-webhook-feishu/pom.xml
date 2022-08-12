@@ -96,7 +96,7 @@
             </executions>
             <configuration>
                <!--镜像仓库地址 -->
-               <repository>javafamily/${artifactId}</repository>
+               <repository>javafamily/${project.artifactId}</repository>
                <!--镜像tag -->
                <tag>${project.version}</tag>
                <!--镜像仓库用户名和密码 -->

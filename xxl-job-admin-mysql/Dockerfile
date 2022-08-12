@@ -15,7 +15,7 @@ LABEL author="Jack Li"
 
 # add jar to container and renaming to app.jar
 ARG JAR_FILE
-ADD ./${JAR_FILE} app.jar
+ADD ./target/${JAR_FILE} app.jar
 
 ENV JAVA_OPTS="\
    "
