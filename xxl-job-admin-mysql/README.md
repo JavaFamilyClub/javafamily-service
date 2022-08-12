@@ -1,13 +1,17 @@
 # XXL-Job-Admin 镜像
 
-> XXL-Job-Admin 镜像, 可直接部署使用
+> 基于 MySql 数据库的 XXL-Job-Admin 镜像, 可直接部署使用
 
 ## 1. 运行命令
 
 ``` xml
-docker run -d --name xxl-job-admin --restart=always --net="host" \
+docker run -d --name xxl-job-admin --restart=always \
+-p 8080:8080 \
+-e MYSQL_IP="192.168.3.26" \
+-e MYSQL_DBNAME="db_project-xxl-job" \
 -e MYSQL_USERNAME=root \
--e MYSQL_PWD=rootAdmin \
+-e MYSQL_PWD=root \
+-e DS_INIT_MODE=never \
 javafamily/xxl-job-admin-mysql:2.3.2-SNAPSHOT
 ```
 
