@@ -141,7 +141,7 @@ public class AlertController {
       properties.setHookUrl(
          "https://open.feishu.cn/open-apis/bot/v2/hook/" + token);
 
-      return new FeiShuNotifyHandler(properties, restTemplate);
+      return new FeiShuNotifyHandler(properties, restTemplate, null);
    }
 
    /**
