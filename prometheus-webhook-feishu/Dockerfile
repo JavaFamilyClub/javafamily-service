@@ -3,7 +3,7 @@
 # Author: Jack Li
 # base image using java8
 #FROM openjdk:8-jre-alpine
-FROM java:8
+FROM openjdk:8
 
 LABEL maintainer="JavaFamily javafamily.club@outlook.com"
 LABEL author="Jack Li"
