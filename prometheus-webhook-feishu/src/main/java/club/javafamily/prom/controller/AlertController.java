@@ -5,13 +5,17 @@ import club.javafamily.nf.request.*;
 import club.javafamily.nf.request.tags.BaseTextTagContentItem;
 import club.javafamily.nf.request.tags.LinkTagContentItem;
 import club.javafamily.nf.service.FeiShuNotifyHandler;
+import club.javafamily.prom.constant.AlertConstant;
 import club.javafamily.prom.constant.SystemConstant;
+import club.javafamily.prom.enums.AlertStatusEnum;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.text.StringSubstitutor;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -41,14 +45,25 @@ public class AlertController {
       JSONObject jsonObject = parseAnnotation(body);
 
       String text = parseContent(jsonObject,
-         SystemConstant.CONTENT_TEMPLATE, SystemConstant.CONTENT_KEY);
+         AlertConstant.CONTENT_TEMPLATE, AlertConstant.CONTENT_KEY);
+
+      AlertStatusEnum status = getStatus(jsonObject);
+
+      // 故障恢复 title
+      if(status == AlertStatusEnum.RESOLVED) {
+         jsonObject.put(AlertConstant.TITLE_RESULT, text);
+
+         text = parseTemplateOrDefault(
+            jsonObject, AlertConstant.RESOLVED_TITLE_TEMPLATE,
+            AlertConstant.DEFAULT_RESOLVED_TITLE);
+      }
 
       log.info("Request received, text is {} \n", text);
 
       final FeiShuTextNotifyRequest request
          = FeiShuTextNotifyRequest.of(text);
 
-      final String token = jsonObject.getString(SystemConstant.FEISHU_TOKEN_KEY);
+      final String token = jsonObject.getString(AlertConstant.FEISHU_TOKEN_KEY);
 
       final String response = getFeiShuNotifyHandler(token).notify(request);
 
@@ -62,11 +77,23 @@ public class AlertController {
       JSONObject jsonObject = parseAnnotation(body);
 
       String title = parseContent(
-         jsonObject, SystemConstant.TITLE_TEMPLATE, SystemConstant.TITLE_KEY);
+         jsonObject, AlertConstant.TITLE_TEMPLATE, AlertConstant.TITLE_KEY);
+
+      AlertStatusEnum status = getStatus(jsonObject);
+
+      // 故障恢复 title
+      if(status == AlertStatusEnum.RESOLVED) {
+         jsonObject.put(AlertConstant.TITLE_RESULT, title);
+
+         title = parseTemplateOrDefault(
+            jsonObject, AlertConstant.RESOLVED_TITLE_TEMPLATE,
+            AlertConstant.DEFAULT_RESOLVED_TITLE);
+      }
+
       String content = parseContent(
-         jsonObject, SystemConstant.CONTENT_TEMPLATE, SystemConstant.CONTENT_KEY);
-      String btnLabel = parseContent(jsonObject, null, SystemConstant.BTN_LABEL_KEY);
-      String btnLink = parseContent(jsonObject, null, SystemConstant.BTN_LINK_KEY);
+         jsonObject, AlertConstant.CONTENT_TEMPLATE, AlertConstant.CONTENT_KEY);
+      String btnLabel = parseContent(jsonObject, null, AlertConstant.BTN_LABEL_KEY);
+      String btnLink = parseContent(jsonObject, null, AlertConstant.BTN_LINK_KEY);
 
       log.info("Request received, title is {}, content is {}, label is {}, link is {} \n",
          title, content, btnLabel, btnLink);
@@ -76,7 +103,7 @@ public class AlertController {
          new BaseTextTagContentItem<>(content),
          new LinkTagContentItem(btnLabel, btnLink));
 
-      final String token = jsonObject.getString(SystemConstant.FEISHU_TOKEN_KEY);
+      final String token = jsonObject.getString(AlertConstant.FEISHU_TOKEN_KEY);
 
       final String response = getFeiShuNotifyHandler(token).notify(request);
 
@@ -90,11 +117,23 @@ public class AlertController {
       JSONObject jsonObject = parseAnnotation(body);
 
       String title = parseContent(
-         jsonObject, SystemConstant.TITLE_TEMPLATE, SystemConstant.TITLE_KEY);
+         jsonObject, AlertConstant.TITLE_TEMPLATE, AlertConstant.TITLE_KEY);
+
+      AlertStatusEnum status = getStatus(jsonObject);
+
+      // 故障恢复 title
+      if(status == AlertStatusEnum.RESOLVED) {
+         jsonObject.put(AlertConstant.TITLE_RESULT, title);
+
+         title = parseTemplateOrDefault(
+            jsonObject, AlertConstant.RESOLVED_TITLE_TEMPLATE,
+            AlertConstant.DEFAULT_RESOLVED_TITLE);
+      }
+
       String content = parseContent(
-         jsonObject, SystemConstant.CONTENT_TEMPLATE, SystemConstant.CONTENT_KEY);
-      String btnLabel = parseContent(jsonObject, null, SystemConstant.BTN_LABEL_KEY);
-      String btnLink = parseContent(jsonObject, null, SystemConstant.BTN_LINK_KEY);
+         jsonObject, AlertConstant.CONTENT_TEMPLATE, AlertConstant.CONTENT_KEY);
+      String btnLabel = parseContent(jsonObject, null, AlertConstant.BTN_LABEL_KEY);
+      String btnLink = parseContent(jsonObject, null, AlertConstant.BTN_LINK_KEY);
 
       log.info("Request received, title is {}, content is {}, label is {}, link is {} \n",
          title, content, btnLabel, btnLink);
@@ -102,13 +141,36 @@ public class AlertController {
       final FeiShuCardNotifyRequest request = FeiShuCardNotifyRequest.of(
               title, content, btnLabel, btnLink);
 
-      final String token = jsonObject.getString(SystemConstant.FEISHU_TOKEN_KEY);
+      final String token = jsonObject.getString(AlertConstant.FEISHU_TOKEN_KEY);
 
       final String response = getFeiShuNotifyHandler(token).notify(request);
 
       log.info("\n alertCard response is : {}\n", request);
 
       return response;
+   }
+
+   /**
+    * 获取报警状态
+    * @param jsonObject body
+    * @return status
+    */
+   public static AlertStatusEnum getStatus(JSONObject jsonObject) {
+      try {
+         if(jsonObject == null ||
+            StringUtils.isEmpty(jsonObject.getString(SystemConstant.STATUS_KEY)))
+         {
+            return AlertStatusEnum.FIRING;
+         }
+
+         return EnumUtils.getEnum(AlertStatusEnum.class,
+            jsonObject.getString(SystemConstant.STATUS_KEY).toUpperCase());
+      }
+      catch (Exception e) {
+         e.printStackTrace();
+      }
+
+      return AlertStatusEnum.FIRING;
    }
 
    /**
@@ -122,7 +184,7 @@ public class AlertController {
       log.info("Request received, body is: \n\n{}\n\n",
          json.toJSONString());
 
-      return json.getJSONObject(SystemConstant.ANNO_KEY);
+      return json.getJSONObject(AlertConstant.ANNO_KEY);
    }
 
    /**
@@ -141,7 +203,7 @@ public class AlertController {
       properties.setHookUrl(
          "https://open.feishu.cn/open-apis/bot/v2/hook/" + token);
 
-      return new FeiShuNotifyHandler(properties, restTemplate);
+      return new FeiShuNotifyHandler(properties, restTemplate, null);
    }
 
    /**
@@ -162,6 +224,33 @@ public class AlertController {
       }
 
       String template = jsonObject.getString(templateKey);
+
+      Map<String, Object> params = jsonObject.getInnerMap();
+
+      return StringSubstitutor.replace(template, params);
+   }
+
+   /**
+    * 格式化内容
+    * @param jsonObject commonAnnotations
+    * @param templateKey 模板 key
+    * @param defaultTemplate 默认模板
+    * @return 格式化后的内容
+    */
+   private String parseTemplateOrDefault(JSONObject jsonObject,
+                                         String templateKey,
+                                         String defaultTemplate)
+   {
+      String template;
+
+      if(ObjectUtils.isEmpty(templateKey)
+         || ObjectUtils.isEmpty(jsonObject.getString(templateKey)))
+      {
+         template = defaultTemplate;
+      }
+      else {
+         template = jsonObject.getString(templateKey);
+      }
 
       Map<String, Object> params = jsonObject.getInnerMap();
 

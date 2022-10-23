@@ -17,6 +17,6 @@ public class Application {
 
       SpringApplication.run(Application.class, args);
 
-      System.out.println("飞书 AlertManager 启动成功!");
+      System.out.println("AlertManager 飞书通知处理器启动成功!");
    }
 }
