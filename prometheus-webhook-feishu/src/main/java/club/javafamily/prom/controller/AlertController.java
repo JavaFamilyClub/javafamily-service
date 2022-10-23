@@ -47,7 +47,7 @@ public class AlertController {
       String text = parseContent(jsonObject,
          AlertConstant.CONTENT_TEMPLATE, AlertConstant.CONTENT_KEY);
 
-      AlertStatusEnum status = getStatus(jsonObject);
+      AlertStatusEnum status = getStatus(body);
 
       // 故障恢复 title
       if(status == AlertStatusEnum.RESOLVED) {
@@ -79,7 +79,7 @@ public class AlertController {
       String title = parseContent(
          jsonObject, AlertConstant.TITLE_TEMPLATE, AlertConstant.TITLE_KEY);
 
-      AlertStatusEnum status = getStatus(jsonObject);
+      AlertStatusEnum status = getStatus(body);
 
       // 故障恢复 title
       if(status == AlertStatusEnum.RESOLVED) {
@@ -119,7 +119,7 @@ public class AlertController {
       String title = parseContent(
          jsonObject, AlertConstant.TITLE_TEMPLATE, AlertConstant.TITLE_KEY);
 
-      AlertStatusEnum status = getStatus(jsonObject);
+      AlertStatusEnum status = getStatus(body);
 
       // 故障恢复 title
       if(status == AlertStatusEnum.RESOLVED) {
@@ -135,7 +135,7 @@ public class AlertController {
       String btnLabel = parseContent(jsonObject, null, AlertConstant.BTN_LABEL_KEY);
       String btnLink = parseContent(jsonObject, null, AlertConstant.BTN_LINK_KEY);
 
-      log.info("Request received, title is {}, content is {}, label is {}, link is {} \n",
+      log.info("Request received, title result is {}, content is {}, label is {}, link is {} \n",
          title, content, btnLabel, btnLink);
 
       final FeiShuCardNotifyRequest request = FeiShuCardNotifyRequest.of(
@@ -152,11 +152,13 @@ public class AlertController {
 
    /**
     * 获取报警状态
-    * @param jsonObject body
+    * @param body request body
     * @return status
     */
-   public static AlertStatusEnum getStatus(JSONObject jsonObject) {
+   public static AlertStatusEnum getStatus(String body) {
       try {
+         JSONObject jsonObject = JSONObject.parseObject(body);
+
          if(jsonObject == null ||
             StringUtils.isEmpty(jsonObject.getString(SystemConstant.STATUS_KEY)))
          {
