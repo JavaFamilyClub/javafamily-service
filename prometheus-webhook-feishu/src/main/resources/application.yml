@@ -27,4 +27,3 @@ javafamily:
          hook-url: ${FEISHU_TOKEN}
          security-type: keyword
          keyWord: 测试
-
