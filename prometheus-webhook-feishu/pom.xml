@@ -61,6 +61,11 @@
          <artifactId>feishu-notification-spring-boot-starter</artifactId>
       </dependency>
 
+      <dependency>
+         <groupId>club.javafamily</groupId>
+         <artifactId>javafamily-utils-core</artifactId>
+      </dependency>
+
    </dependencies>
 
    <build>
