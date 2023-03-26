@@ -24,6 +24,7 @@
       <module>javafamily-swagger2word</module>
       <module>prometheus-webhook-feishu</module>
       <module>xxl-job-admin-mysql</module>
+      <module>prometheus-webhook-dingtalk</module>
    </modules>
 
    <distributionManagement>

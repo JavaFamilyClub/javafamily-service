@@ -1,0 +1,29 @@
+server:
+   port: 8080
+   max-http-header-size: 1024000
+   compression:
+      enabled: true
+      mime-types: application/json,application/xml,text/html,text/plain,text/css,application/x-javascript
+
+spring:
+   application:
+      name: prometheus-webhook-dingtalk
+
+   jackson:
+      default-property-inclusion: ALWAYS
+      time-zone: GMT+8
+      date-format: yyyy-MM-dd HH:mm:ss
+
+management:
+   endpoints:
+      web:
+         exposure:
+            include:
+               - "*"
+
+javafamily:
+   notify:
+      dingtalk:
+         hook-url: ${DINGTALK_TOKEN}
+         security-type: keyword
+         keyWord: 测试
