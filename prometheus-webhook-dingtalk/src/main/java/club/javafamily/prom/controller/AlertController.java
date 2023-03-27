@@ -2,8 +2,11 @@ package club.javafamily.prom.controller;
 
 import club.javafamily.nf.properties.DingTalkProperties;
 import club.javafamily.nf.request.DingTalkNotifyRequest;
+import club.javafamily.nf.request.card.multi.DingTalkMultiBtnCardRequest;
 import club.javafamily.nf.request.card.single.DingTalkSingleBtnCardRequest;
 import club.javafamily.nf.request.link.DingTalkLinkRequest;
+import club.javafamily.nf.request.markdown.DingTalkMarkDownRequest;
+import club.javafamily.nf.request.tags.CardBtn;
 import club.javafamily.nf.request.text.DingTalkTextNotifyRequest;
 import club.javafamily.nf.service.DingTalkNotifyHandler;
 import club.javafamily.prom.constant.AlertConstant;
@@ -20,7 +23,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Jack Li
@@ -59,10 +62,19 @@ public class AlertController {
             AlertConstant.DEFAULT_RESOLVED_TITLE);
       }
 
-      log.info("Request received, text is {} \n", text);
+      final boolean atAll = ObjectUtils.nullSafeEquals(Boolean.TRUE,
+         parseTemplateOrDefault(jsonObject,
+            AlertConstant.AT_ALL, null));
 
-      final DingTalkNotifyRequest request
-         = DingTalkTextNotifyRequest.of(text);
+      final String atInfo = parseTemplateOrDefault(jsonObject,
+         AlertConstant.AT_USER_PHONE, null);
+      final String[] atUserPhones = StringUtils.hasText(atInfo) ? atInfo.split(",") : null;
+
+      log.info("Request received, text is {}, atall is {}, atInfo: {}\n",
+         text, atAll, atInfo);
+
+      DingTalkNotifyRequest request = DingTalkTextNotifyRequest.of(
+         text, atAll, atUserPhones);
 
       final String token = jsonObject.getString(AlertConstant.HANDLER_TOKEN_KEY);
 
@@ -95,11 +107,13 @@ public class AlertController {
          jsonObject, AlertConstant.CONTENT_TEMPLATE, AlertConstant.CONTENT_KEY);
       String link = parseContent(jsonObject, null, AlertConstant.BTN_LINK_KEY);
 
-      log.info("Request received, title is {}, content is {}, link is {} \n",
-         title, content, link);
+      final String picUrl = parseTemplateOrDefault(jsonObject, AlertConstant.LINK_PIC_URL, null);
+
+      log.info("Request received, title is {}, content is {}, link is {} pic url is: {}\n",
+         title, content, link, picUrl);
 
       final DingTalkNotifyRequest request = DingTalkLinkRequest.of(
-         title, content, link);
+         title, content, link, picUrl);
 
       final String token = jsonObject.getString(AlertConstant.HANDLER_TOKEN_KEY);
 
@@ -110,7 +124,52 @@ public class AlertController {
       return response;
    }
 
-   @PostMapping("/alert/card")
+
+   @PostMapping("/alert/mk")
+   public String alertMarkdown(@RequestBody String body) {
+      JSONObject jsonObject = parseAnnotation(body);
+
+      String title = parseContent(
+         jsonObject, AlertConstant.TITLE_TEMPLATE, AlertConstant.TITLE_KEY);
+
+      AlertStatusEnum status = getStatus(body);
+
+      // 故障恢复 title
+      if(status == AlertStatusEnum.RESOLVED) {
+         jsonObject.put(AlertConstant.TITLE_RESULT, title);
+
+         title = parseTemplateOrDefault(
+            jsonObject, AlertConstant.RESOLVED_TITLE_TEMPLATE,
+            AlertConstant.DEFAULT_RESOLVED_TITLE);
+      }
+
+      String content = parseContent(
+         jsonObject, AlertConstant.CONTENT_TEMPLATE, AlertConstant.CONTENT_KEY);
+
+      final boolean atAll = ObjectUtils.nullSafeEquals(Boolean.TRUE,
+         parseTemplateOrDefault(jsonObject,
+            AlertConstant.AT_ALL, null));
+
+      final String atInfo = parseTemplateOrDefault(jsonObject,
+         AlertConstant.AT_USER_PHONE, null);
+      final String[] atUserPhones = StringUtils.hasText(atInfo) ? atInfo.split(",") : null;
+
+      log.info("Request received, title is {}, content is {}, atall is {}, atInfo: {}\n",
+         title, content, atAll, atInfo);
+
+      final DingTalkNotifyRequest request = DingTalkMarkDownRequest.of(
+         title, content, atAll, atUserPhones);
+
+      final String token = jsonObject.getString(AlertConstant.HANDLER_TOKEN_KEY);
+
+      final String response = getDingTalkNotifyHandler(token).notify(request);
+
+      log.info("\n alertPost response is : {}\n", request);
+
+      return response;
+   }
+
+   @PostMapping("/alert/card/single")
    public String alertCard(@RequestBody String body) {
       JSONObject jsonObject = parseAnnotation(body);
 
@@ -141,6 +200,65 @@ public class AlertController {
          content,
          btnLabel,
          btnLink);
+
+      final String token = jsonObject.getString(AlertConstant.HANDLER_TOKEN_KEY);
+
+      final String response = getDingTalkNotifyHandler(token).notify(request);
+
+      log.info("\n alertCard response is : {}\n", request);
+
+      return response;
+   }
+
+   @PostMapping("/alert/card/multi")
+   public String alertMultiCard(@RequestBody String body) {
+      JSONObject jsonObject = parseAnnotation(body);
+
+      String title = parseContent(
+         jsonObject, AlertConstant.TITLE_TEMPLATE, AlertConstant.TITLE_KEY);
+
+      AlertStatusEnum status = getStatus(body);
+
+      // 故障恢复 title
+      if(status == AlertStatusEnum.RESOLVED) {
+         jsonObject.put(AlertConstant.TITLE_RESULT, title);
+
+         title = parseTemplateOrDefault(
+            jsonObject, AlertConstant.RESOLVED_TITLE_TEMPLATE,
+            AlertConstant.DEFAULT_RESOLVED_TITLE);
+      }
+
+      String content = parseContent(
+         jsonObject, AlertConstant.CONTENT_TEMPLATE, AlertConstant.CONTENT_KEY);
+      String btnLabels = parseContent(jsonObject, null, AlertConstant.BTN_LABELS_KEY);
+      String btnLinks = parseContent(jsonObject, null, AlertConstant.BTN_LINKS_KEY);
+
+      log.info("Request received, title result is {}, content is {}, label is {}, link is {} \n",
+         title, content, btnLabels, btnLinks);
+
+      List<CardBtn> cardBtns = new ArrayList<>();
+
+      if(StringUtils.hasText(btnLabels)) {
+         String[] labels = btnLabels.split(AlertConstant.SPLIT_FLAG);
+         final String[] links =
+            btnLinks == null ? new String[0] : btnLinks.split(AlertConstant.SPLIT_FLAG);
+
+         for (int i = 0; i < labels.length; i++) {
+            if(i >= links.length) {
+               break;
+            }
+
+            cardBtns.add(CardBtn.builder()
+               .title(labels[i])
+               .actionURL(links[i])
+               .build());
+         }
+      }
+
+      DingTalkNotifyRequest request = DingTalkMultiBtnCardRequest.of(
+         title,
+         content,
+         cardBtns.toArray(new CardBtn[0]));
 
       final String token = jsonObject.getString(AlertConstant.HANDLER_TOKEN_KEY);
 
@@ -261,6 +379,10 @@ public class AlertController {
       }
 
       Map<String, Object> params = jsonObject.getInnerMap();
+
+      if(template == null) {
+         return null;
+      }
 
       return StringSubstitutor.replace(template, params);
    }
