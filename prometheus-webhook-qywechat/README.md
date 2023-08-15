@@ -73,12 +73,12 @@ groups:
       serviceName: "{{ $labels.serviceName }}"
       instance: "{{ $labels.instance }}"
       value: "{{ $value }}"
-      btn: "点击查看详情 :玫瑰:"
-      link: "http://127.0.0.1/grafana/d/aka/duo-job-ji-cheng-fu-wu-qi-jian-kong"
+      pic: "https://pic.fonthaha.com/fonthaha/file/2022/01/27/bb1ff4d2a42b2329910686ab41928afe.png"
+      link: "http://124.223.75.119:92/prometheus/targets"
       # 通过 template 指定通知内容模板
       template: "**${serviceName}**(${instance}) 内存使用率已经超过阈值 **98%**, 请及时处理！\n当前值: ${value}%"
       # 【可选】通过 token 指定通知到不同企业微信群
-      token: "{{ $labels.feishuToken }}"
+      token: "{{ $labels.token }}"
 
 - name: 磁盘预警
   rules:
@@ -93,10 +93,10 @@ groups:
       instance: "{{ $labels.instance }}"
       mountpoint: "{{ $labels.mountpoint }}"
       value: "{{ $value }}"
-      btn: "点击查看详情 :玫瑰:"
-      link: "http://127.0.0.1/grafana/d/aka/duo-job-ji-cheng-fu-wu-qi-jian-kong"
+      pic: "https://pic.fonthaha.com/fonthaha/file/2022/01/27/bb1ff4d2a42b2329910686ab41928afe.png"
+      link: "http://124.223.75.119:92/prometheus/targets"
       template: "**${serviceName}**(${instance}) 服务器磁盘设备使用率超过 **90%**, 请及时处理！\n挂载点: ${mountpoint}\n当前值: ${value}%!"
-      token: "{{ $labels.feishuToken }}"
+      token: "{{ $labels.token }}"
 
 - name: 实例存活报警
   rules:
@@ -109,10 +109,10 @@ groups:
       title: "节点宕机报警"
       serviceName: "{{ $labels.serviceName }}"
       instance: "{{ $labels.instance }}"
-      btn: "点击查看详情 :玫瑰:"
-      link: "http://127.0.0.1:9090/targets"
+      pic: "https://pic.fonthaha.com/fonthaha/file/2022/01/27/bb1ff4d2a42b2329910686ab41928afe.png"
+      link: "http://124.223.75.119:92/prometheus/targets"
       template: "节点 **${serviceName}**(${instance}) 断联, 请及时处理!"
-      token: "{{ $labels.feishuToken }}"
+      token: "{{ $labels.token }}"
 ```
 
 
