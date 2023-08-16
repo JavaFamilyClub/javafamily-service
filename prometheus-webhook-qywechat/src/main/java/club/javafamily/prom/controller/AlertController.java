@@ -138,7 +138,7 @@ public class AlertController {
          title, content, picUrl, link);
 
       final QyWechatNewsNotifyRequest request = QyWechatNewsNotifyRequest.of(
-              title, content, picUrl, link);
+              title, content, link, picUrl);
 
       final String token = jsonObject.getString(AlertConstant.TOKEN_KEY);
 
