@@ -4,14 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
    <modelVersion>4.0.0</modelVersion>
 
-<!--   <parent>-->
-<!--      <groupId>club.javafamily</groupId>-->
-<!--      <artifactId>javafamily-parent</artifactId>-->
-<!--      <version>2.3.2-SNAPSHOT</version>-->
-<!--      <relativePath />-->
-<!--   </parent>-->
+   <parent>
+      <groupId>club.javafamily</groupId>
+      <artifactId>javafamily-parent</artifactId>
+      <version>2.3.2-SNAPSHOT</version>
+   </parent>
 
-   <groupId>club.javafamily</groupId>
    <artifactId>javafamily-service</artifactId>
    <version>2.3.2.1-SNAPSHOT</version>
    <packaging>pom</packaging>
@@ -61,13 +59,13 @@
 
    <dependencyManagement>
       <dependencies>
-         <dependency>
-            <groupId>club.javafamily</groupId>
-            <artifactId>javafamily-parent</artifactId>
-            <version>${javafamily.parent.version}</version>
-            <type>pom</type>
-            <scope>import</scope>
-         </dependency>
+<!--         <dependency>-->
+<!--            <groupId>club.javafamily</groupId>-->
+<!--            <artifactId>javafamily-parent</artifactId>-->
+<!--            <version>${javafamily.parent.version}</version>-->
+<!--            <type>pom</type>-->
+<!--            <scope>import</scope>-->
+<!--         </dependency>-->
 
          <dependency>
             <groupId>io.swagger</groupId>
