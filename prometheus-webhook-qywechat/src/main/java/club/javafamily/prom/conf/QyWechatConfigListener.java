@@ -31,9 +31,8 @@ public class QyWechatConfigListener implements ApplicationListener<ApplicationSt
               && !(properties.getHookUrl().startsWith("http://")
               || properties.getHookUrl().startsWith("https://")))
       {
-         properties.setHookUrl(Tool.appendPath(
-                 "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=",
-                 properties.getHookUrl()));
+         properties.setHookUrl("https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key="
+                 + properties.getHookUrl());
       }
    }
 }
