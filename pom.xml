@@ -14,17 +14,20 @@
    <packaging>pom</packaging>
    <name>${project.artifactId}</name>
    <url>https://github.com/JavaFamilyClub/javafamily-service</url>
-   <description>javafamily tools service</description>
+   <description>javafamily common service</description>
 
    <properties>
       <swagger.parser.version>1.0.50</swagger.parser.version>
+      <javafamily.parent.version>2.3.2-SNAPSHOT</javafamily.parent.version>
    </properties>
 
    <modules>
-      <module>javafamily-swagger2word</module>
       <module>prometheus-webhook-feishu</module>
-      <module>xxl-job-admin-mysql</module>
       <module>prometheus-webhook-dingtalk</module>
+      <module>prometheus-webhook-qywechat</module>
+
+      <module>javafamily-swagger2word</module>
+      <module>xxl-job-admin-mysql</module>
    </modules>
 
    <distributionManagement>
@@ -55,6 +58,14 @@
 
    <dependencyManagement>
       <dependencies>
+<!--         <dependency>-->
+<!--            <groupId>club.javafamily</groupId>-->
+<!--            <artifactId>javafamily-parent</artifactId>-->
+<!--            <version>${javafamily.parent.version}</version>-->
+<!--            <type>pom</type>-->
+<!--            <scope>import</scope>-->
+<!--         </dependency>-->
+
          <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-parser</artifactId>
